@@ -53,11 +53,11 @@ class DemoSeeder extends Seeder
 
         $this->team($demo, 'DEM', 'Demo Dragons', 'Casual team looking for a jungler and a mid laner.', 'Silver I', true);
         $nightfall = $this->team($players['Nightfall'], 'NGT', 'Night Owls', 'Scrims every Tuesday and Thursday.', 'Gold IV', true);
-        TeamMember::create(['team_id' => $nightfall->id, 'user_id' => $players['Haven']->id, 'role_id' => $players['Haven']->role_id]);
+        TeamMember::firstOrCreate(['user_id' => $players['Haven']->id], ['team_id' => $nightfall->id, 'role_id' => $players['Haven']->role_id]);
         $this->team($players['Mentor'], 'MNT', 'Mentor Squad', 'Not recruiting right now.', null, false);
 
-        $demo->favorites()->create(['favorite_user_id' => $players['Aurora']->id]);
-        $demo->socialLinks()->create(['platform' => 'twitch', 'url' => 'https://twitch.tv/lolscout']);
+        $demo->favorites()->firstOrCreate(['favorite_user_id' => $players['Aurora']->id]);
+        $demo->socialLinks()->updateOrCreate(['platform' => 'twitch'], ['url' => 'https://twitch.tv/lolscout']);
     }
 
     private function player(string $username, string $email, string $roleSlug, ?string $rank, string $password): User
