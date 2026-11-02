@@ -176,4 +176,12 @@ class AuthTest extends TestCase
         $this->assertModelMissing($user);
         $this->assertGuest();
     }
+
+    public function test_responses_carry_security_headers(): void
+    {
+        $this->get('/login')
+            ->assertHeader('X-Frame-Options', 'DENY')
+            ->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    }
 }

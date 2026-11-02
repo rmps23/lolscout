@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Riot\RiotClient;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->isProduction()) {
+            URL::forceHttps();
+        }
+
         Password::defaults(fn () => $this->app->isProduction()
             ? Password::min(10)->letters()->numbers()->uncompromised()
             : Password::min(10)->letters()->numbers());
