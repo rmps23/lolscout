@@ -68,4 +68,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->morphMany(SocialLink::class, 'linkable');
     }
+
+    /** Pending applications to teams this user owns (shown as the notification badge). */
+    public function pendingInboxCount(): int
+    {
+        return Application::where('status', 'pending')
+            ->whereHas('team', fn ($q) => $q->where('owner_id', $this->id))
+            ->count();
+    }
 }
