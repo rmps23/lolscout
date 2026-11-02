@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\RiotAccountController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -37,5 +39,13 @@ Route::middleware('auth')->group(function () {
         Route::put('/email', [AccountController::class, 'updateEmail'])->name('email');
         Route::put('/password', [AccountController::class, 'updatePassword'])->name('password');
         Route::delete('/account', [AccountController::class, 'destroy'])->name('destroy');
+
+        Route::get('/riot', [RiotAccountController::class, 'show'])->name('riot');
+        Route::post('/riot', [RiotAccountController::class, 'link'])->middleware('throttle:10,1')->name('riot.link');
+        Route::post('/riot/verify', [RiotAccountController::class, 'verify'])->middleware('throttle:10,1')->name('riot.verify');
+        Route::post('/riot/refresh', [RiotAccountController::class, 'refresh'])->middleware('throttle:10,1')->name('riot.refresh');
+        Route::delete('/riot', [RiotAccountController::class, 'destroy'])->name('riot.destroy');
     });
+
+    Route::middleware('verified')->get('/players/{user:username}', [PlayerController::class, 'show'])->name('players.show');
 });
