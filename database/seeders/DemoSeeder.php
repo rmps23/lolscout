@@ -10,6 +10,7 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -33,6 +34,15 @@ class DemoSeeder extends Seeder
             $this->command?->error('Set DEMO_PASSWORD in .env first.');
 
             return;
+        }
+
+        // Hosts that seed on every start (the free Render tier) should not redo the slow work:
+        // skip when the demo user already exists and the configured password is unchanged.
+        if (app()->isProduction()) {
+            $existing = User::where('email', 'demo@lolscout.test')->first();
+            if ($existing && Hash::check($password, $existing->password)) {
+                return;
+            }
         }
 
         $this->call(LookupSeeder::class);

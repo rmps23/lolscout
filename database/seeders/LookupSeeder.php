@@ -10,8 +10,19 @@ use Illuminate\Support\Str;
 
 class LookupSeeder extends Seeder
 {
+    /** Rows this seeder creates; used to skip the work on hosts that run it on every start. */
+    private const ROLES = 8;
+
+    private const NATIONS = 47;
+
+    private const RANKS = 32;
+
     public function run(): void
     {
+        if (Role::count() >= self::ROLES && Nation::count() >= self::NATIONS && Rank::count() >= self::RANKS) {
+            return;
+        }
+
         $roles = [
             ['top', 'Top', 'top.png', true],
             ['jungle', 'Jungle', 'jungler.png', true],
