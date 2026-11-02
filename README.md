@@ -1,5 +1,7 @@
 # LOLSCOUT
 
+**Live demo:** https://lolscout.onrender.com
+
 A platform for **League of Legends** players to find a team: verify your Riot account, show your rank and champion mastery, and search, join or manage amateur teams.
 
 Built in 2023 as my first full PHP project and rebuilt in Laravel afterwards. The original code is kept untouched in [`legacy/`](legacy/) for reference.
