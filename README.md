@@ -85,7 +85,7 @@ Prices and free tiers change, so check the providers' current offers. After depl
 
 ## Free online demo (Render + Neon)
 
-The repo ships a `Dockerfile` and a `render.yaml` blueprint for a public, read-mostly demo. In this *showcase* mode (`APP_SHOWCASE=true`) the site loads demo data, closes sign-ups (there is no mail server) and shows a demo login. Free tiers and their limits change, so check the providers' current terms.
+The repo ships a `Dockerfile` and a `render.yaml` blueprint for a public, read-mostly demo. In this *showcase* mode (`APP_SHOWCASE=true`) the site loads demo data, closes sign-ups (there is no mail server) and adds a **Try the demo account** button to the login page. Visitors click it and land in the example account `demo@lolscout.test` without typing anything; the server signs them in (`POST /demo-login`, CSRF-protected, 404 outside showcase mode) and the password never reaches the browser. The shared account cannot change its email or password or be deleted, so one visitor can't lock out the next. Free tiers and their limits change, so check the providers' current terms.
 
 1. **Database.** Create a free PostgreSQL database (for example on [Neon](https://neon.tech) or Supabase) and copy its connection URL (`postgresql://user:password@host/db?sslmode=require`).
 2. **Service.** In [Render](https://render.com) choose *New › Blueprint*, connect this repository and pick the `laravel-rewrite` or `main` branch. Render reads `render.yaml` and builds the Docker image.
@@ -93,7 +93,7 @@ The repo ships a `Dockerfile` and a `render.yaml` blueprint for a public, read-m
    - `APP_KEY` – run `php artisan key:generate --show` locally and paste the result.
    - `APP_URL` – the service's `https://….onrender.com` address.
    - `DB_URL` – the database URL from step 1.
-   - `DEMO_PASSWORD` – the password of `demo@lolscout.test`; share it with whoever you show the site to.
+   - `DEMO_PASSWORD` – the password of `demo@lolscout.test`, used only when seeding the demo data. Visitors don't need it, so keep it private.
    - `RIOT_API_KEY` – optional; without it the Riot pages show a friendly "API not available" message.
 4. **Deploy.** On start the container runs the migrations, seeds the reference data and, in showcase mode, the demo data.
 
