@@ -550,7 +550,7 @@ table {
 .content {
 	width: 100%;
 	min-height: auto;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 	padding: 20px;
 }
@@ -567,7 +567,7 @@ table {
 
 .index-bar1 {
 	width: 100%;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 	text-align: center;
 	color: #eee;
@@ -664,7 +664,7 @@ table {
 	width: 100%;
 	min-height: 1000px;
 	background-color: #222;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 }
 
@@ -1493,7 +1493,7 @@ table {
 
 .not-main {
 	min-height: 1000px;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 	padding: 50px;
 }
@@ -1592,7 +1592,7 @@ table {
 
 .apply-main {
 	min-height: 1000px;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 	text-align: right;
 	padding: 50px;
@@ -1827,7 +1827,7 @@ table {
 
 .editteam-main {
 	min-height: 1000px;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 	padding-top: 100px;
 }
@@ -2137,7 +2137,7 @@ table {
 
 .fav-main {
 	min-height: 1000px;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 	padding: 50px;
 }
@@ -2246,7 +2246,7 @@ table {
 
 .inv-main {
 	min-height: 1000px;
-	background-image: url("images/index-bg.png");
+	background-image: url("/images/index-bg.png");
 	background-size: cover;
 	padding: 50px;
 }

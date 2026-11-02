@@ -15,6 +15,7 @@
         @csrf
         <button type="submit" class="navbar-link" style="background:none;border:0;cursor:pointer;">Logout</button>
       </form>
+      @if (auth()->user()->hasVerifiedEmail())
       <a class="navbar-link" href="{{ route('settings.account') }}">Settings</a>
       <a class="navbar-link" href="{{ route('teams.search') }}">Search teams</a>
       <a class="navbar-link" href="{{ route('teams.mine') }}">My team</a>
@@ -24,6 +25,7 @@
       <a class="navbar-link" href="{{ route('settings.riot') }}">Riot account</a>
       <a class="navbar-link" href="{{ route('settings.social') }}">Social</a>
       <a class="navbar-link" href="{{ route('players.show', auth()->user()) }}">Profile</a>
+      @endif
     @else
       <a class="navbar-link" href="{{ route('register') }}">Signup</a>
       <a class="navbar-link" href="{{ route('login') }}">Login</a>
