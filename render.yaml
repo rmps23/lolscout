@@ -1,0 +1,36 @@
+# Render Blueprint: one Docker web service. The database is external (see README).
+services:
+  - type: web
+    name: lolscout
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_SHOWCASE
+        value: "true"
+      - key: TRUSTED_PROXIES
+        value: "*"
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: MAIL_MAILER
+        value: log
+      - key: APP_KEY          # php artisan key:generate --show
+        sync: false
+      - key: APP_URL          # https://<your-service>.onrender.com
+        sync: false
+      - key: DB_URL           # postgresql://user:password@host/dbname?sslmode=require
+        sync: false
+      - key: DEMO_PASSWORD
+        sync: false
+      - key: RIOT_API_KEY     # optional
+        sync: false
