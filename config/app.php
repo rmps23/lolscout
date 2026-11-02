@@ -49,6 +49,8 @@ return [
 
     'demo_password' => env('DEMO_PASSWORD'),
 
+    'demo_email' => env('DEMO_EMAIL', 'demo@lolscout.test'),
+
     /*
     |--------------------------------------------------------------------------
     | Application URL

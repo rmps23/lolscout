@@ -19,9 +19,15 @@
   </div>
   <button type="submit" class="btn btn-block">Login</button>
   @if (config('app.showcase'))
-    <p class="auth-foot">This is a demo. Log in as <strong>demo@lolscout.test</strong> (password provided by the site owner).</p>
+    <p class="auth-foot">This is a demo site. The button below signs you in to a shared example account, no password needed.</p>
   @else
     <p class="auth-foot">No account yet? <a href="{{ route('register') }}">Sign up</a></p>
   @endif
 </form>
+@if (config('app.showcase'))
+<form method="POST" action="{{ route('demo.login') }}">
+  @csrf
+  <button type="submit" class="btn btn-block">Try the demo account</button>
+</form>
+@endif
 @endsection

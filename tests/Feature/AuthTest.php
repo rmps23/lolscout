@@ -192,6 +192,80 @@ class AuthTest extends TestCase
         $this->get('/register')->assertRedirect(route('login'));
         $this->post('/register', $this->registrationData())->assertRedirect(route('login'));
         $this->assertSame(0, User::count());
-        $this->get('/login')->assertOk()->assertSee('demo@lolscout.test')->assertDontSee('Sign up');
+        $this->get('/login')->assertOk()->assertSee('Try the demo account')->assertDontSee('Sign up');
+    }
+
+    private function demoUser(): User
+    {
+        return User::factory()->create(['email' => 'demo@lolscout.test', 'username' => 'Demo', 'password' => 'Hidden-demo-pass-1']);
+    }
+
+    public function test_demo_login_button_signs_the_demo_user_in_during_showcase(): void
+    {
+        config(['app.showcase' => true]);
+        $demo = $this->demoUser();
+
+        $this->get('/login')
+            ->assertOk()
+            ->assertSee('action="'.route('demo.login').'"', false)
+            ->assertSee('name="_token"', false)
+            ->assertDontSee('Hidden-demo-pass-1')
+            ->assertDontSee('password provided by the site owner');
+
+        $this->post('/demo-login')->assertRedirect(route('settings.account'));
+        $this->assertAuthenticatedAs($demo);
+    }
+
+    public function test_demo_login_route_is_a_404_outside_showcase_mode(): void
+    {
+        $this->demoUser();
+
+        $this->post('/demo-login')->assertNotFound();
+        $this->assertGuest();
+        $this->get('/login')->assertOk()->assertDontSee('Try the demo account');
+    }
+
+    public function test_demo_login_is_a_404_when_the_demo_user_does_not_exist(): void
+    {
+        config(['app.showcase' => true]);
+
+        $this->post('/demo-login')->assertNotFound();
+        $this->assertGuest();
+    }
+
+    public function test_showcase_demo_account_cannot_be_changed_or_deleted(): void
+    {
+        config(['app.showcase' => true]);
+        $demo = $this->demoUser();
+        $hash = $demo->password;
+
+        $this->actingAs($demo)
+            ->put('/settings/email', ['email' => 'hijack@example.com', 'current_password' => 'Hidden-demo-pass-1'])
+            ->assertRedirect(route('settings.account'))
+            ->assertSessionHasErrors('demo');
+
+        $this->actingAs($demo)
+            ->put('/settings/password', ['current_password' => 'Hidden-demo-pass-1', 'password' => 'Another12345', 'password_confirmation' => 'Another12345'])
+            ->assertSessionHasErrors('demo');
+
+        $this->actingAs($demo)
+            ->delete('/settings/account', ['delete_password' => 'Hidden-demo-pass-1'])
+            ->assertSessionHasErrors('demo');
+
+        $demo->refresh();
+        $this->assertSame('demo@lolscout.test', $demo->email);
+        $this->assertSame($hash, $demo->password);
+        $this->assertModelExists($demo);
+    }
+
+    public function test_other_accounts_are_not_affected_by_the_demo_protection(): void
+    {
+        config(['app.showcase' => true]);
+        $user = User::factory()->create(['password' => 'Secret12345']);
+
+        $this->actingAs($user)
+            ->put('/settings/password', ['current_password' => 'Secret12345', 'password' => 'Another12345', 'password_confirmation' => 'Another12345'])
+            ->assertSessionHasNoErrors();
+        $this->assertTrue(Hash::check('Another12345', $user->fresh()->password));
     }
 }

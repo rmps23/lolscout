@@ -29,6 +29,12 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    /** The shared account behind the "Try the demo account" button; only exists in showcase mode. */
+    public function isShowcaseDemo(): bool
+    {
+        return config('app.showcase') && $this->email === config('app.demo_email');
+    }
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
