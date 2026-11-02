@@ -27,7 +27,7 @@ class TeamSearchController extends Controller
             ->whereDoesntHave('members', fn ($q) => $q->where('user_id', $user->id))
             ->when($filters['q'] ?? null, function ($q, $term) {
                 $like = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $term);
-                $q->where('name', 'like', "%{$like}%");
+                $q->whereLike('name', "%{$like}%");
             })
             ->when($filters['role_id'] ?? null, fn ($q, $roleId) => $q->whereDoesntHave('members', fn ($m) => $m->where('role_id', $roleId)))
             ->when($request->boolean('eligible'), fn ($q) => $q->where(function ($q) use ($myRank) {
