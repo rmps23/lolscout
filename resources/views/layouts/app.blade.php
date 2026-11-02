@@ -49,7 +49,7 @@
       @else
         <div class="nav-right">
           <a class="btn btn-ghost btn-sm" href="{{ route('login') }}">Login</a>
-          <a class="btn btn-sm" href="{{ route('register') }}">Sign up</a>
+          @unless (config('app.showcase'))<a class="btn btn-sm" href="{{ route('register') }}">Sign up</a>@endunless
         </div>
       @endauth
     </div>

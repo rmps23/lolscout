@@ -184,4 +184,14 @@ class AuthTest extends TestCase
             ->assertHeader('X-Content-Type-Options', 'nosniff')
             ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     }
+
+    public function test_showcase_mode_closes_sign_ups(): void
+    {
+        config(['app.showcase' => true]);
+
+        $this->get('/register')->assertRedirect(route('login'));
+        $this->post('/register', $this->registrationData())->assertRedirect(route('login'));
+        $this->assertSame(0, User::count());
+        $this->get('/login')->assertOk()->assertSee('demo@lolscout.test')->assertDontSee('Sign up');
+    }
 }

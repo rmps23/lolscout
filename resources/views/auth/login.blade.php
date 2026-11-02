@@ -18,6 +18,10 @@
     <a href="{{ route('password.request') }}">Forgot password?</a>
   </div>
   <button type="submit" class="btn btn-block">Login</button>
-  <p class="auth-foot">No account yet? <a href="{{ route('register') }}">Sign up</a></p>
+  @if (config('app.showcase'))
+    <p class="auth-foot">This is a demo. Log in as <strong>demo@lolscout.test</strong> (password provided by the site owner).</p>
+  @else
+    <p class="auth-foot">No account yet? <a href="{{ route('register') }}">Sign up</a></p>
+  @endif
 </form>
 @endsection

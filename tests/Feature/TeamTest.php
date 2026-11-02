@@ -313,6 +313,7 @@ class TeamTest extends TestCase
 
         $this->actingAs($viewer)->get('/teams/search')->assertSee('Alpha Wolves')->assertSee('Beta Bears')->assertDontSee('Hidden Team');
         $this->actingAs($viewer)->get('/teams/search?q=wolves')->assertSee('Alpha Wolves')->assertDontSee('Beta Bears');
+        $this->actingAs($viewer)->get('/teams/search?q=WOLVES')->assertSee('Alpha Wolves');
         $this->actingAs($viewer)->get('/teams/search?q=%25')->assertDontSee('Alpha Wolves');
         $this->actingAs($viewer)->get('/teams/search?role_id='.$this->role('top')->id)->assertDontSee('Alpha Wolves')->assertSee('Beta Bears');
         $this->actingAs($viewer)->get('/teams/search?eligible=1')->assertSee('Alpha Wolves')->assertDontSee('Beta Bears');

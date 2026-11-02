@@ -16,8 +16,12 @@ use Illuminate\View\View;
 
 class RegisterController extends Controller
 {
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if (config('app.showcase')) {
+            return $this->closed();
+        }
+
         return view('auth.register', [
             'nations' => Nation::orderBy('name')->get(),
             'roles' => Role::orderBy('id')->get(),
@@ -26,6 +30,10 @@ class RegisterController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        if (config('app.showcase')) {
+            return $this->closed();
+        }
+
         $data = $request->validate([
             'username' => ['required', 'string', 'max:30', 'regex:/^[A-Za-z0-9_-]+$/', 'unique:users,username', Rule::notIn(['admin', 'administrator'])],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
@@ -40,5 +48,10 @@ class RegisterController extends Controller
         Auth::login($user);
 
         return redirect()->route('verification.notice');
+    }
+
+    private function closed(): RedirectResponse
+    {
+        return redirect()->route('login')->with('status', 'Sign-ups are disabled in this demo. Use the demo login instead.');
     }
 }

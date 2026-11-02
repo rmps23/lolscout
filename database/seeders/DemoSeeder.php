@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 /**
  * Local demo data: a verified login plus a few players and teams.
- * Run with `php artisan db:seed --class=DemoSeeder`. Refuses to run in production.
+ * Run with `php artisan db:seed --class=DemoSeeder`. Refuses to run in production unless APP_SHOWCASE is on.
  *
  * Demo login (local use only): demo@lolscout.test, with the password in DEMO_PASSWORD (.env).
  */
@@ -22,13 +22,13 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        if (app()->isProduction()) {
-            $this->command?->error('DemoSeeder is for local development only.');
+        if (app()->isProduction() && ! config('app.showcase')) {
+            $this->command?->error('DemoSeeder only runs locally or when APP_SHOWCASE is on.');
 
             return;
         }
 
-        $password = env('DEMO_PASSWORD');
+        $password = config('app.demo_password');
         if (blank($password)) {
             $this->command?->error('Set DEMO_PASSWORD in .env first.');
 

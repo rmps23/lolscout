@@ -15,7 +15,7 @@
       @endif
     @else
       <a href="{{ route('login') }}" class="btn btn-ghost">Login</a>
-      <a href="{{ route('register') }}" class="btn">Sign up</a>
+      @unless (config('app.showcase'))<a href="{{ route('register') }}" class="btn">Sign up</a>@endunless
     @endauth
   </div>
 </section>

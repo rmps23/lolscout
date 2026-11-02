@@ -42,6 +42,14 @@ return [
     'debug' => (bool) env('APP_DEBUG', false),
 
     /*
+    | Showcase mode: a public demo with seeded data and no sign-ups (no mail server needed).
+    */
+
+    'showcase' => (bool) env('APP_SHOWCASE', false),
+
+    'demo_password' => env('DEMO_PASSWORD'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
