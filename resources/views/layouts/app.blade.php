@@ -4,34 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>@yield('title', 'LOLSCOUT')</title>
-  <link rel="stylesheet" href="{{ asset('css/legacy.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
-  <div class="navbar">
-    <a href="{{ route('home') }}" class="navbar-logo">LOLSCOUT <span style="font-size:12px; color:red;">beta</span></a>
-    @auth
-      <form method="POST" action="{{ route('logout') }}" style="display:inline;">
-        @csrf
-        <button type="submit" class="navbar-link" style="background:none;border:0;cursor:pointer;">Logout</button>
-      </form>
-      @if (auth()->user()->hasVerifiedEmail())
-      <a class="navbar-link" href="{{ route('settings.account') }}">Settings</a>
-      <a class="navbar-link" href="{{ route('teams.search') }}">Search teams</a>
-      <a class="navbar-link" href="{{ route('teams.mine') }}">My team</a>
-      <a class="navbar-link" href="{{ route('applications.mine') }}">My applies</a>
-      <a class="navbar-link" href="{{ route('applications.inbox') }}">Notifications @if (($n = auth()->user()->pendingInboxCount()) > 0)<span class="badge" style="color:#6BD0FF;">{{ $n }}</span>@endif</a>
-      <a class="navbar-link" href="{{ route('favorites.index') }}">Favourites</a>
-      <a class="navbar-link" href="{{ route('settings.riot') }}">Riot account</a>
-      <a class="navbar-link" href="{{ route('settings.social') }}">Social</a>
-      <a class="navbar-link" href="{{ route('players.show', auth()->user()) }}">Profile</a>
-      @endif
-    @else
-      <a class="navbar-link" href="{{ route('register') }}">Signup</a>
-      <a class="navbar-link" href="{{ route('login') }}">Login</a>
-    @endauth
-  </div>
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="{{ route('home') }}" class="nav-logo">LOLSCOUT<small>beta</small></a>
 
-  @yield('content')
+      @auth
+        @if (auth()->user()->hasVerifiedEmail())
+          <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+          <nav class="nav-links" aria-label="Main">
+            <a href="{{ route('teams.search') }}" @class(['active' => request()->routeIs('teams.search')])>Search teams</a>
+            <a href="{{ route('teams.mine') }}" @class(['active' => request()->is('teams') || request()->is('teams/create') || (request()->routeIs('teams.*') && ! request()->routeIs('teams.search'))])>My team</a>
+            <a href="{{ route('applications.mine') }}" @class(['active' => request()->routeIs('applications.mine')])>My applies</a>
+            <a href="{{ route('applications.inbox') }}" @class(['active' => request()->routeIs('applications.inbox')])>Notifications
+              @if (($pending = auth()->user()->pendingInboxCount()) > 0)<span class="nav-count">{{ $pending }}</span>@endif
+            </a>
+            <a href="{{ route('favorites.index') }}" @class(['active' => request()->routeIs('favorites.index')])>Favourites</a>
+          </nav>
+          <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true">☰</label>
+        @endif
+
+        <div class="nav-right">
+          <details class="menu">
+            <summary>{{ auth()->user()->username }}</summary>
+            <div class="menu-panel">
+              @if (auth()->user()->hasVerifiedEmail())
+                <a href="{{ route('players.show', auth()->user()) }}">My profile</a>
+                <a href="{{ route('settings.riot') }}">Riot account</a>
+                <a href="{{ route('settings.social') }}">Social links</a>
+                <a href="{{ route('settings.account') }}">Settings</a>
+              @endif
+              <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Log out</button>
+              </form>
+            </div>
+          </details>
+        </div>
+      @else
+        <div class="nav-right">
+          <a class="btn btn-ghost btn-sm" href="{{ route('login') }}">Login</a>
+          <a class="btn btn-sm" href="{{ route('register') }}">Sign up</a>
+        </div>
+      @endauth
+    </div>
+  </header>
+
+  <main>
+    @yield('content')
+  </main>
+
+  <footer class="footer">
+    LOLSCOUT isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties.
+  </footer>
 </body>
 </html>
