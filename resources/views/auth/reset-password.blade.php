@@ -1,17 +1,23 @@
 @extends('layouts.form')
 @section('title', 'Reset password · LOLSCOUT')
+@section('subheading', 'Choose a new password')
 
 @section('form')
 <form method="POST" action="{{ route('password.update') }}">
   @csrf
   <input type="hidden" name="token" value="{{ $token }}">
-  <p class="ls-text">Email</p>
-  <input type="email" class="ls-textbox" name="email" value="{{ old('email', $email) }}" required>
-  <p class="ls-text">New password</p>
-  <input type="password" class="ls-textbox" name="password" autocomplete="new-password" required>
-  <p class="ls-text">Repeat new password</p>
-  <input type="password" class="ls-textbox" name="password_confirmation" autocomplete="new-password" required>
-  <br><br>
-  <button type="submit" class="ls-button">Reset password</button>
+  <div class="field">
+    <label class="label" for="email">Email</label>
+    <input class="input" id="email" type="email" name="email" value="{{ old('email', $email) }}" required>
+  </div>
+  <div class="field">
+    <label class="label" for="password">New password</label>
+    <input class="input" id="password" type="password" name="password" autocomplete="new-password" required>
+  </div>
+  <div class="field">
+    <label class="label" for="password_confirmation">Repeat new password</label>
+    <input class="input" id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" required>
+  </div>
+  <button type="submit" class="btn btn-block">Reset password</button>
 </form>
 @endsection

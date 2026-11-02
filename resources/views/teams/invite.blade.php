@@ -1,12 +1,15 @@
-@extends('layouts.form')
+@extends('layouts.page')
 @section('title', 'Team invitation · LOLSCOUT')
+@section('container-class', 'container-narrow')
 
-@section('form')
-@error('invite')<p class="alert-text">{{ $message }}</p>@enderror
-<img src="{{ $team->logoUrl() }}" width="96" height="96" alt="">
-<h3 class="ls-text">You were invited to [{{ $team->tag }}] {{ $team->name }}</h3>
-<p class="ls-text">You will join as {{ auth()->user()->role?->name ?? 'a player (set your role first)' }}.</p>
-<form method="POST" action="{{ route('invite.accept', $team->invite_code) }}">
-  @csrf<button type="submit" class="ls-button">Accept invitation</button>
-</form>
+@section('main')
+<section class="card" style="text-align:center">
+  <img class="avatar avatar-lg" src="{{ $team->logoUrl() }}" alt="" style="margin:0 auto 14px; display:block">
+  <p class="muted">You were invited to join</p>
+  <h1 class="page-title"><span class="muted">[{{ $team->tag }}]</span> {{ $team->name }}</h1>
+  <p class="muted field" style="margin-top:10px">You will join as {{ auth()->user()->role?->name ?? 'a player (set your role first)' }}.</p>
+  <form method="POST" action="{{ route('invite.accept', $team->invite_code) }}">
+    @csrf<button type="submit" class="btn">Accept invitation</button>
+  </form>
+</section>
 @endsection

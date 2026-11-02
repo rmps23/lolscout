@@ -1,17 +1,23 @@
 @extends('layouts.form')
 @section('title', 'Login · LOLSCOUT')
+@section('subheading', 'Welcome back')
 
 @section('form')
 <form method="POST" action="{{ route('login') }}">
   @csrf
-  <p class="ls-text">Email</p>
-  <input type="email" class="ls-textbox" name="email" value="{{ old('email') }}" required autofocus>
-  <p class="ls-text">Password</p>
-  <input type="password" class="ls-textbox" name="password" autocomplete="current-password" required>
-  <p class="ls-text"><label><input type="checkbox" name="remember"> Remember me</label></p>
-  <p class="ls-text">No account yet? <a href="{{ route('register') }}">Signup</a></p>
-  <a class="ls-forgotpw" href="{{ route('password.request') }}">Forgot password?</a>
-  <br><br>
-  <button type="submit" class="ls-button">Login</button>
+  <div class="field">
+    <label class="label" for="email">Email</label>
+    <input class="input" id="email" type="email" name="email" value="{{ old('email') }}" autocomplete="email" required autofocus>
+  </div>
+  <div class="field">
+    <label class="label" for="password">Password</label>
+    <input class="input" id="password" type="password" name="password" autocomplete="current-password" required>
+  </div>
+  <div class="row row-between field">
+    <label class="check"><input type="checkbox" name="remember"> Remember me</label>
+    <a href="{{ route('password.request') }}">Forgot password?</a>
+  </div>
+  <button type="submit" class="btn btn-block">Login</button>
+  <p class="auth-foot">No account yet? <a href="{{ route('register') }}">Sign up</a></p>
 </form>
 @endsection
