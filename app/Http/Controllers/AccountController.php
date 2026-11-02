@@ -40,6 +40,10 @@ class AccountController extends Controller
 
     public function updateEmail(Request $request): RedirectResponse
     {
+        if ($refusal = $this->refuseForDemo($request)) {
+            return $refusal;
+        }
+
         $user = $request->user();
 
         $data = $request->validate([
@@ -59,6 +63,10 @@ class AccountController extends Controller
 
     public function updatePassword(Request $request): RedirectResponse
     {
+        if ($refusal = $this->refuseForDemo($request)) {
+            return $refusal;
+        }
+
         $data = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', Password::defaults()],
@@ -71,6 +79,10 @@ class AccountController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
+        if ($refusal = $this->refuseForDemo($request)) {
+            return $refusal;
+        }
+
         $request->validate(['delete_password' => ['required', 'current_password']]);
 
         $user = $request->user();
@@ -82,5 +94,16 @@ class AccountController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home')->with('status', 'Your account has been deleted.');
+    }
+
+    /** The shared showcase account must stay usable for the next visitor. */
+    private function refuseForDemo(Request $request): ?RedirectResponse
+    {
+        if (! $request->user()->isShowcaseDemo()) {
+            return null;
+        }
+
+        return redirect()->route('settings.account')
+            ->withErrors(['demo' => 'The shared demo account cannot change its email or password, or be deleted.']);
     }
 }
