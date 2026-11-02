@@ -40,6 +40,15 @@
 </form>
 
 <hr>
+<h3 class="ls-text">Social links</h3>
+<form method="POST" action="{{ route('teams.social', $team) }}">
+  @csrf @method('PUT')
+  @include('partials.social-form', ['links' => $team->socialLinks->pluck('url', 'platform')])
+  <br>
+  <button type="submit" class="ls-button">Save social links</button>
+</form>
+
+<hr>
 <h3 class="ls-text">Invite link</h3>
 <p class="ls-text">Anyone with this link (and a free spot for their role) can join.</p>
 <input type="text" class="ls-textbox" readonly value="{{ route('invite.show', $team->invite_code) }}" onfocus="this.select()">

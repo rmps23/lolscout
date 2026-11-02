@@ -36,6 +36,19 @@
       @endif
 
       @if ($player->bio)<p class="ls-text">{{ $player->bio }}</p>@endif
+      @if ($player->membership)
+        <p class="ls-text">Team: <a href="{{ route('teams.show', $player->membership->team_id) }}">{{ $player->membership->team->name }}</a></p>
+      @endif
+      @include('partials.social-links', ['owner' => $player])
+
+      @error('favorite')<p class="alert-text">{{ $message }}</p>@enderror
+      @unless ($player->is(auth()->user()))
+        @if ($isFavorite)
+          <form method="POST" action="{{ route('favorites.destroy', $player) }}">@csrf @method('DELETE')<button type="submit" class="ls-button">Remove from favourites</button></form>
+        @else
+          <form method="POST" action="{{ route('favorites.store', $player) }}">@csrf<button type="submit" class="ls-button">Add to favourites</button></form>
+        @endif
+      @endunless
     </div>
   </div>
 </div>

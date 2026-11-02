@@ -20,7 +20,9 @@
       <a class="navbar-link" href="{{ route('teams.mine') }}">My team</a>
       <a class="navbar-link" href="{{ route('applications.mine') }}">My applies</a>
       <a class="navbar-link" href="{{ route('applications.inbox') }}">Notifications @if (($n = auth()->user()->pendingInboxCount()) > 0)<span class="badge" style="color:#6BD0FF;">{{ $n }}</span>@endif</a>
+      <a class="navbar-link" href="{{ route('favorites.index') }}">Favourites</a>
       <a class="navbar-link" href="{{ route('settings.riot') }}">Riot account</a>
+      <a class="navbar-link" href="{{ route('settings.social') }}">Social</a>
       <a class="navbar-link" href="{{ route('players.show', auth()->user()) }}">Profile</a>
     @else
       <a class="navbar-link" href="{{ route('register') }}">Signup</a>

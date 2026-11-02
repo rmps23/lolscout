@@ -11,6 +11,8 @@
 </p>
 @if ($team->info)<p class="ls-text">{{ $team->info }}</p>@endif
 
+@include('partials.social-links', ['owner' => $team])
+
 @error('member')<p class="alert-text">{{ $message }}</p>@enderror
 
 <h3 class="ls-text">Roster</h3>

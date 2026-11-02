@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\SocialLinkController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamSearchController;
@@ -49,6 +51,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/riot/verify', [RiotAccountController::class, 'verify'])->middleware('throttle:10,1')->name('riot.verify');
         Route::post('/riot/refresh', [RiotAccountController::class, 'refresh'])->middleware('throttle:10,1')->name('riot.refresh');
         Route::delete('/riot', [RiotAccountController::class, 'destroy'])->name('riot.destroy');
+
+        Route::get('/social', [SocialLinkController::class, 'edit'])->name('social');
+        Route::put('/social', [SocialLinkController::class, 'update'])->name('social.update');
     });
 
     Route::middleware('verified')->group(function () {
@@ -66,6 +71,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/invite', [TeamController::class, 'regenerateInvite'])->name('invite.regenerate');
             Route::delete('/members/{member}', [TeamController::class, 'kick'])->whereNumber('member')->name('members.kick');
             Route::delete('/leave', [TeamController::class, 'leave'])->name('leave');
+            Route::put('/social', [SocialLinkController::class, 'updateTeam'])->name('social');
             Route::post('/apply', [ApplicationController::class, 'store'])->middleware('throttle:20,1')->name('apply');
         });
 
@@ -74,6 +80,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/notifications', [ApplicationController::class, 'inbox'])->name('applications.inbox');
         Route::post('/applications/{application}/accept', [ApplicationController::class, 'accept'])->name('applications.accept');
         Route::post('/applications/{application}/decline', [ApplicationController::class, 'decline'])->name('applications.decline');
+
+        Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+        Route::post('/favorites/{user:username}', [FavoriteController::class, 'store'])->name('favorites.store');
+        Route::delete('/favorites/{user:username}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 
         Route::get('/invite/{code}', [InviteController::class, 'show'])->name('invite.show');
         Route::post('/invite/{code}', [InviteController::class, 'accept'])->middleware('throttle:20,1')->name('invite.accept');
