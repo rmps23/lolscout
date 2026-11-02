@@ -6,6 +6,7 @@ use App\Http\Controllers\SocialLinkController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamSearchController;
+use App\Http\Controllers\Auth\DemoLoginController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -23,6 +24,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store'])->middleware('throttle:10,1');
+    Route::post('/demo-login', DemoLoginController::class)->middleware('throttle:10,1')->name('demo.login');
 
     Route::get('/forgot-password', [PasswordResetController::class, 'request'])->name('password.request');
     Route::post('/forgot-password', [PasswordResetController::class, 'email'])->middleware('throttle:6,1')->name('password.email');
