@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\InviteController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamSearchController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -45,6 +49,34 @@ Route::middleware('auth')->group(function () {
         Route::post('/riot/verify', [RiotAccountController::class, 'verify'])->middleware('throttle:10,1')->name('riot.verify');
         Route::post('/riot/refresh', [RiotAccountController::class, 'refresh'])->middleware('throttle:10,1')->name('riot.refresh');
         Route::delete('/riot', [RiotAccountController::class, 'destroy'])->name('riot.destroy');
+    });
+
+    Route::middleware('verified')->group(function () {
+        Route::get('/teams', [TeamController::class, 'mine'])->name('teams.mine');
+        Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
+        Route::post('/teams', [TeamController::class, 'store'])->middleware('throttle:10,1')->name('teams.store');
+        Route::get('/teams/search', TeamSearchController::class)->name('teams.search');
+
+        Route::prefix('/teams/{team}')->whereNumber('team')->name('teams.')->group(function () {
+            Route::get('/', [TeamController::class, 'show'])->name('show');
+            Route::get('/edit', [TeamController::class, 'edit'])->name('edit');
+            Route::put('/', [TeamController::class, 'update'])->name('update');
+            Route::delete('/', [TeamController::class, 'destroy'])->name('destroy');
+            Route::post('/logo', [TeamController::class, 'logo'])->middleware('throttle:10,1')->name('logo');
+            Route::post('/invite', [TeamController::class, 'regenerateInvite'])->name('invite.regenerate');
+            Route::delete('/members/{member}', [TeamController::class, 'kick'])->whereNumber('member')->name('members.kick');
+            Route::delete('/leave', [TeamController::class, 'leave'])->name('leave');
+            Route::post('/apply', [ApplicationController::class, 'store'])->middleware('throttle:20,1')->name('apply');
+        });
+
+        Route::get('/applications', [ApplicationController::class, 'mine'])->name('applications.mine');
+        Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
+        Route::get('/notifications', [ApplicationController::class, 'inbox'])->name('applications.inbox');
+        Route::post('/applications/{application}/accept', [ApplicationController::class, 'accept'])->name('applications.accept');
+        Route::post('/applications/{application}/decline', [ApplicationController::class, 'decline'])->name('applications.decline');
+
+        Route::get('/invite/{code}', [InviteController::class, 'show'])->name('invite.show');
+        Route::post('/invite/{code}', [InviteController::class, 'accept'])->middleware('throttle:20,1')->name('invite.accept');
     });
 
     Route::middleware('verified')->get('/players/{user:username}', [PlayerController::class, 'show'])->name('players.show');

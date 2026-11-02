@@ -16,6 +16,10 @@
         <button type="submit" class="navbar-link" style="background:none;border:0;cursor:pointer;">Logout</button>
       </form>
       <a class="navbar-link" href="{{ route('settings.account') }}">Settings</a>
+      <a class="navbar-link" href="{{ route('teams.search') }}">Search teams</a>
+      <a class="navbar-link" href="{{ route('teams.mine') }}">My team</a>
+      <a class="navbar-link" href="{{ route('applications.mine') }}">My applies</a>
+      <a class="navbar-link" href="{{ route('applications.inbox') }}">Notifications @if (($n = auth()->user()->pendingInboxCount()) > 0)<span class="badge" style="color:#6BD0FF;">{{ $n }}</span>@endif</a>
       <a class="navbar-link" href="{{ route('settings.riot') }}">Riot account</a>
       <a class="navbar-link" href="{{ route('players.show', auth()->user()) }}">Profile</a>
     @else
